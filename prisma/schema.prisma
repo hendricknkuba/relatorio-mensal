@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Tabela de Usuários (para login e cadastro)
+model User {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique  // Usado para login
+  password      String    // Senha criptografada (bcrypt)
+  name          String
+  phone         String?   @unique // Opcional (para WhatsApp)
+  role          Role      @default(USER) // ADMIN ou USER
+  isPioneer     Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  reports       Report[]
+  refreshTokens RefreshToken[]
+
+  Preacher Preacher[]
+}
+
+// Tabela de Pregadores (pessoas registradas)
+model Preacher {
+  id            Int       @id @default(autoincrement())
+  name          String
+  phone         String?   @unique
+  isPioneer     Boolean   @default(false)
+  createdBy     User      @relation(fields: [userId], references: [id])
+  userId        Int       // Quem cadastrou este pregador
+  reports       Report[]
+  createdAt     DateTime  @default(now())
+}
+
+// Tabela de Relatórios Mensais
+model Report {
+  id            Int       @id @default(autoincrement())
+  month         String    // Formato "YYYY-MM" (ex: "2024-05")
+  participated  Boolean   @default(false)
+  studies       Int?      // Estudos dirigidos (null se não participou)
+  hours         Int?      // Horas (apenas para pioneiros)
+  preacher      Preacher  @relation(fields: [preacherId], references: [id])
+  preacherId    Int
+  submittedBy   User      @relation(fields: [userId], references: [id])
+  userId        Int       // Quem enviou o relatório
+  createdAt     DateTime  @default(now())
+}
+
+// Tabela para Refresh Tokens (JWT)
+model RefreshToken {
+  id          Int      @id @default(autoincrement())
+  token       String   @unique
+  expiresAt   DateTime
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  createdAt   DateTime @default(now())
+}
+
+// Enum para roles (papeis de usuário)
+enum Role {
+  ADMIN
+  USER
+}
