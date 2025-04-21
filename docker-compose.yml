@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  dev-db:
+    image: postgres:latest
+    container_name: relatorio-mensal
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=myrelatorio_db
+    ports:
+      - "5432:5432"
+    networks:
+      - relatorio-mensal
+networks:
+  relatorio-mensal:
