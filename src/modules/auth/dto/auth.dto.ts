@@ -1,24 +1,24 @@
-import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsEmpty,
+  isNotEmpty,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator';
 
 export class AuthDto {
-  @IsString()
   @IsNotEmpty()
   name: string;
 
-  @IsEmail()
   @IsNotEmpty()
+  @IsEmail()
   email: string;
 
-  @IsString()
   @IsNotEmpty()
   password: string;
 
-  @IsBoolean()
   isPioneer: boolean;
-
-  @IsString()
   role: string;
-
-  @IsString()
   phone: string;
 }
