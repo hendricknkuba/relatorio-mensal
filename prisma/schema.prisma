@@ -29,6 +29,8 @@ model User {
   refreshTokens RefreshToken[]
 
   Preacher Preacher[]
+
+  @@map("users")
 }
 
 // Tabela de Pregadores (pessoas registradas)
@@ -41,6 +43,8 @@ model Preacher {
   userId        Int       // Quem cadastrou este pregador
   reports       Report[]
   createdAt     DateTime  @default(now())
+
+  @@map("preachers")
 }
 
 // Tabela de Relatórios Mensais
@@ -55,6 +59,8 @@ model Report {
   submittedBy   User      @relation(fields: [userId], references: [id])
   userId        Int       // Quem enviou o relatório
   createdAt     DateTime  @default(now())
+
+  @@map("reports")
 }
 
 // Tabela para Refresh Tokens (JWT)
