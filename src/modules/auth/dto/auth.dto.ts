@@ -1,16 +1,6 @@
-import {
-  IsBoolean,
-  IsEmail,
-  IsEmpty,
-  isNotEmpty,
-  IsNotEmpty,
-  IsString,
-} from 'class-validator';
+import { IsBoolean, isBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class AuthDto {
-  @IsNotEmpty()
-  name: string;
-
   @IsNotEmpty()
   @IsEmail()
   email: string;
@@ -18,7 +8,15 @@ export class AuthDto {
   @IsNotEmpty()
   password: string;
 
+  @IsString()
+  name: string;
+
+  @IsBoolean()
   isPioneer: boolean;
+
+  @IsString()
   role: string;
+
+  @IsString()
   phone: string;
 }
