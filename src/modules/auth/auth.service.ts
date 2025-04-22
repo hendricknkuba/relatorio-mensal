@@ -19,10 +19,11 @@ export class AuthService {
         },
       });
 
-      return user;
+      const { password, ...result } = user;
+      return result;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
-        // Verify prisma duplicate field error code
+        // Verify prisma duplicated data error code
         if (error.code === 'P2002') {
           throw new ForbiddenException('Credentials already taken.');
         }
@@ -32,7 +33,20 @@ export class AuthService {
     }
   }
 
-  signin() {
-    return { msg: 'I am signed in' };
+  async signin(dto: AuthDto) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+
+    if (!user) throw new ForbiddenException('User not found.');
+
+    const passMatch = await argon.verify(user.password, dto.password);
+
+    if (!passMatch) throw new ForbiddenException('Invalid credentials.');
+
+    const { password, ...result } = user;
+    return result;
   }
 }
