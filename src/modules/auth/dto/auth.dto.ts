@@ -1,4 +1,4 @@
-import { IsBoolean, isBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, isBoolean, IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class AuthDto {
   @IsNotEmpty()
@@ -9,14 +9,18 @@ export class AuthDto {
   password: string;
 
   @IsString()
-  name: string;
+  @IsOptional()
+  name?: string;
 
   @IsBoolean()
-  isPioneer: boolean;
+  @IsOptional()
+  isPioneer?: boolean;
 
   @IsString()
-  role: string;
+  @IsOptional()
+  role?: string;
 
   @IsString()
-  phone: string;
+  @IsOptional()
+  phone?: string;
 }
